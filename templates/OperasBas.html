@@ -1,0 +1,34 @@
+{% extends "layaout.html" %}
+{% block container%}
+
+
+<form action="/resultado" method="post">
+    <label for="n1">Numero 1:</label>
+    <input type="number" id="n1" name="n1"><br>
+    <label for="n2">Numero 2:</label>
+    <input type="number" id="n2" name="n2"><br>
+
+
+    <p>Seleccione:</p>
+    <input type="radio" id="suma" name="operacion" value="suma" >
+    <label for="suma">Suma</label><br>
+
+    <input type="radio" id="resta" name="operacion" value="resta">
+    <label for="resta">Resta</label><br>
+
+    <input type="radio" id="multiplicacion" name="operacion" value="multiplicacion">
+    <label for="multiplicacion">Multiplicacion</label><br>
+
+    <input type="radio" id="division" name="operacion" value="division">
+    <label for="division">División</label><br>
+
+    <input type="submit" value="Calcular">
+
+    <br>
+    {% if res %}
+    <h1>El resultado de {{num1}} {{simb}} {{num2}} es {{res}}</h1>
+    {% endif %}
+
+</form>
+
+{% endblock %}

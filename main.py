@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -58,7 +58,66 @@ def operas():
                </form>
             '''
 
+@app.route("/OperasBas")
+def operasbas():
+    return render_template("OperasBas.html")
 
+@app.route("/resultado", methods = ["POST"])
+def result():
+    n1 = request.form.get("n1")
+    n2 = request.form.get("n2")
+    operacion = request.form.get("operacion")
+
+    if operacion == "suma":
+        resultado = int(n1) + int(n2)
+        simbolo = "+"
+    elif operacion == "resta":
+        resultado = int(n1) - int(n2)
+        simbolo = "-"
+    elif operacion == "multiplicacion":
+        resultado = int(n1) * int(n2)
+        simbolo = "x"
+    elif operacion == "division":
+        resultado = int(n1) / int(n2)
+        simbolo = "/"
+    
+    return render_template("OperasBas.html", res = resultado, num1 = n1, num2 = n2, simb = simbolo)
+
+
+
+@app.route("/Cinepolis")
+def cinepolis():
+    return render_template("cinepolis.html")
+
+@app.route("/calcular", methods=["POST"])
+def calcular():
+    nombre = request.form.get("nombre")
+    personas = int(request.form.get("personas"))
+    boletos = int(request.form.get("boletos"))
+    cineco = request.form.get("cineco") == "si"
+    
+    
+    limite = 7 * personas
+    if boletos > limite:
+        mensaje = "Error: No puedes comprar mas de {} boletos".format(limite)
+        return render_template("cinepolis.html", mensaje=mensaje)
+
+    precio_unitario = 12
+    descuento1 = 0.10  
+    descuento2 = 0.15  
+    descuento_cineco = 0.10 
+
+    total = boletos * precio_unitario
+
+    if 3 <= boletos <= 5:
+        total *= (1 - descuento1)
+    elif boletos > 5:
+        total *= (1 - descuento2)
+
+    if cineco:
+        total *= (1 - descuento_cineco)
+
+    return render_template("Cinepolis.html", total=total, nombre=nombre, boletos=boletos, mensaje=None)
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
