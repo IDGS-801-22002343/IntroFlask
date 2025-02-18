@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -106,7 +107,7 @@ def calcular():
     descuento1 = 0.10  
     descuento2 = 0.15  
     descuento_cineco = 0.10 
-
+ 
     total = boletos * precio_unitario
 
     if 3 <= boletos <= 5:
@@ -118,6 +119,41 @@ def calcular():
         total *= (1 - descuento_cineco)
 
     return render_template("Cinepolis.html", total=total, nombre=nombre, boletos=boletos, mensaje=None)
+
+
+def obtener_signo_zodiaco_chino(anio):
+    signos = ["Mono", "Gallo", "Perro", "Cerdo", "Rata", "Buey", "Tigre", "Conejo", "Dragon", "Serpiente", "Caballo", "Cabra"]
+    
+    while anio >= 12:  
+        anio -= 12  
+
+    return signos[anio]
+
+
+@app.route("/Zodiaco")
+def zodiaco():
+    return render_template("zodiaco.html")
+
+@app.route("/signo", methods=["POST"])
+def obtenerSigno():
+    nombre = request.form.get("nombre")
+    apellido_paterno = request.form.get("apellido_paterno")
+    apellido_materno = request.form.get("apellido_materno")
+    dia = int(request.form.get("dia"))
+    mes = int(request.form.get("mes"))
+    anio = int(request.form.get("anio"))
+    sexo = request.form.get("sexo")
+    
+    fecha_actual = datetime.now()
+
+    edad = datetime.now().year - anio
+
+    if (mes > fecha_actual.month) or (mes == fecha_actual.month and dia > fecha_actual.day):
+        edad -= 1
+        
+    signo = obtener_signo_zodiaco_chino(anio) 
+    
+    return render_template("zodiaco.html", nombre=nombre, apellido_paterno=apellido_paterno, apellido_materno=apellido_materno, edad=edad, signo=signo,sexo=sexo)
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
