@@ -162,7 +162,7 @@ def obtenerSigno():
 def alumnos():
     mat = ''
     nom = ''
-    ape = ''
+    ap = ''
     email = ''
 
     alumno_clas = forms.UserForm(request.form)
@@ -170,10 +170,10 @@ def alumnos():
     if request.method == "POST":
         mat = alumno_clas.mat.data
         nom = alumno_clas.nom.data
-        ape = alumno_clas.ap.data
+        ap = alumno_clas.ap.data
         email = alumno_clas.correo.data
 
-    return render_template("Alumnos.html", form = alumno_clas, mat = mat, nom = nom, ape = ape, correo = email)
+    return render_template("Alumnos.html", form = alumno_clas, mat = mat, nom = nom, ap = ap, correo = email)
 
 
 if __name__ == "__main__":

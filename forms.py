@@ -4,16 +4,16 @@ from wtforms import validators
 
 class UserForm(Form):
 
-    mat = IntegerField("Matricula")[
-        validators.DataRequired(message='El campo es requerido'),
-        validators.length(min=3,max=10,message='3-10 caracteres')
-    ]
-    nom = StringField("Nombre")[
-        validators.DataRequired(message='El campo es requerido')
-    ]
-    ap = StringField("Apellido")[
-        validators.DataRequired(message='El campo es requerido')
-    ]
-    correo = EmailField("Correo")[
-        validators.DataRequired(message='El campo es requerido')
-    ]
+    mat = StringField("Matricula",[
+        validators.DataRequired(message="El campo es requerido"),
+        validators.length(min=3,max=10,message="3-10 Caracteres")
+    ])
+    nom = StringField("Nombre",[
+        validators.DataRequired(message="El campo es requerido")
+    ])
+    ap = StringField("Apellido",[
+        validators.DataRequired(message="El campo es requerido")
+    ])
+    correo = EmailField("Correo",[
+        validators.DataRequired(message="El campo es requerido")
+    ])
