@@ -1,15 +1,38 @@
 from flask import Flask, render_template, request
 from datetime import datetime
-
 import forms
+from flask import g
+from flask import flash
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
+app.secret_key = "esta es una clave secreta"
+csrf = CSRFProtect()
+
+
+@app.errorhandler(404)
+def page_notfound(e):
+    return render_template('404.html'), 404
+
+@app.before_request
+def before_request():
+    g.user = "Mario"
+    print("before 1")
+
+
+@app.after_request
+def after_request(response):
+    print("after 1")
+    return response
 
 @app.route("/")
 def index():
+    nom = "None"
     titulo = "IDGS801"
     lista = ["Juan", "Carlos", "Oscar"]
-    return render_template("index.html", titulo = titulo, lista = lista)
+    nom = g.user
+    print("Index 2 {}".format(g.user))
+    return render_template("index.html", titulo = titulo, nom = nom, lista = lista)
 
 @app.route("/ejemplo1")
 def ejemplo1():
@@ -160,21 +183,25 @@ def obtenerSigno():
 
 @app.route("/Alumnos", methods = ["GET" , "POST"])
 def alumnos():
-    mat = ''
+    mat = 'x    '
     nom = ''
     ap = ''
     email = ''
 
     alumno_clas = forms.UserForm(request.form)
 
-    if request.method == "POST":
+    if request.method == "POST" and alumno_clas.validate():
         mat = alumno_clas.mat.data
         nom = alumno_clas.nom.data
         ap = alumno_clas.ap.data
         email = alumno_clas.correo.data
 
+        mensaje = 'BIENVENIDO {}'.format(nom)
+        flash(mensaje)
+
     return render_template("Alumnos.html", form = alumno_clas, mat = mat, nom = nom, ap = ap, correo = email)
 
 
 if __name__ == "__main__":
+    csrf.init_app(app)
     app.run(debug=True, port=3000)
