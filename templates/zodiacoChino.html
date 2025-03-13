@@ -1,0 +1,49 @@
+{% extends "layout3.html" %}
+
+{% block content %}
+
+    {% import "_macro.html" as macro %}
+
+    <div class="container mt-5">
+        <div class="row">
+        <h1 class="text-center">Zodiaco Chino</h1><br><br>
+        <div class="col-md-6">
+        <form action="/ZodiacoChino" method="post" class="p-4 border bg-white shadow rounded" novalidate>
+            {{ form.csrf_token }}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <h4>Datos Personales</h4>
+            
+            {{ macro.campo_form(form.nombre) }}
+            {{ macro.campo_form(form.apellido_paterno) }}
+            {{ macro.campo_form(form.apellido_materno) }}
+            {{ macro.campo_form(form.dia) }}
+            {{ macro.campo_form(form.mes) }}
+            {{ macro.campo_form(form.anio) }}
+            
+            <h4>Sexo</h4>
+            <div class="mb-3">
+                {% for subfield in form.sexo %}
+                    <div class="form-check">
+                        {{ subfield(class_="form-check-input") }}
+                        {{ subfield.label(class_="form-check-label") }}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">Consultar</button>
+        </form>
+    </div>
+
+    {% if signo %}
+            <div class="col-md-6 text-center">
+                <h3>Hola <strong>{{ nombre }} {{ apellido_paterno }} {{ apellido_materno }}</strong></h3>
+                <p>Tienes <strong>{{ edad }}</strong> años</p>
+                <p>Sexo: {{ sexo }}</p>
+                <p>Tu signo del Zodiaco Chino es : <strong>{{ signo }}</strong>.</p>
+                <img src="/static/img/{{ signo.lower() }}.jpg" alt="{{ signo }}" class="img-fluid mt-3">
+        </div>
+    {% endif %}
+</div>
+</div>
+    
+{% endblock %}

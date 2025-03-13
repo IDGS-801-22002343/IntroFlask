@@ -201,6 +201,36 @@ def alumnos():
 
     return render_template("Alumnos.html", form = alumno_clas, mat = mat, nom = nom, ap = ap, correo = email)
 
+@app.route("/ZodiacoChino", methods=["GET", "POST"])
+def zodiacoChino():
+
+    nombre = ""
+    apellido_paterno = ""
+    apellido_materno = ""
+    edad = ""
+    signo = ""
+    sexo = ""
+    mensaje = ''
+    
+    formZ = forms.ZodiacoForm(request.form)
+    
+    if request.method == "POST" and formZ.validate():
+        nombre = formZ.nombre.data
+        apellido_paterno = formZ.apellido_paterno.data
+        apellido_materno = formZ.apellido_materno.data
+        dia = formZ.dia.data
+        mes = formZ.mes.data
+        anio = formZ.anio.data
+        sexo = formZ.sexo.data
+        fecha_actual = datetime.now()
+        edad = fecha_actual.year - anio - ((mes, dia) > (fecha_actual.month, fecha_actual.day))
+        signo = obtener_signo_zodiaco_chino(anio)
+
+        mensaje = 'BIENVENIDO {}'.format(nombre)
+        flash(mensaje)
+
+    return render_template("zodiacoChino.html", form=formZ, nombre=nombre, apellido_paterno=apellido_paterno, apellido_materno=apellido_materno, edad=edad, signo=signo,sexo=sexo,mensaje = mensaje)
+
 
 if __name__ == "__main__":
     csrf.init_app(app)
